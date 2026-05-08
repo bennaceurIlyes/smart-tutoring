@@ -3,17 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
-import { 
-  User, 
-  BookOpen, 
-  Calendar, 
-  MessageSquare, 
-  Settings, 
-  LogOut,
-  ChevronRight,
-  Zap,
-  Star
-} from 'lucide-react';
+import { BookOpen, Calendar, MessageSquare, Settings, LogOut, ChevronRight, Zap, Star, User } from '@/components/Icons';
 import Link from 'next/link';
 
 export default function DashboardPage() {

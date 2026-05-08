@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
-import { Mail, Lock, LogIn, Github } from 'lucide-react';
+import { Mail, Lock, LogIn, Github } from '@/components/Icons';
 import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {

@@ -1,5 +1,7 @@
+'use client';
+
 import Link from 'next/link';
-import { Search, Star, Users, Shield, Zap } from 'lucide-react';
+import { Search, Star, Users, Shield, Zap } from '@/components/Icons';
 
 export default function Home() {
   return (

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
-import { Mail, Lock, User, Briefcase, GraduationCap, ArrowRight } from 'lucide-react';
+import { Mail, Lock, User, Briefcase, GraduationCap, ArrowRight } from '@/components/Icons';
 import { useRouter } from 'next/navigation';
 
 export default function RegisterPage() {

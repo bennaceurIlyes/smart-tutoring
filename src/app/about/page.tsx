@@ -1,6 +1,6 @@
 'use client';
 
-import { BookOpen, Shield, Zap, Heart, Globe, Award } from 'lucide-react';
+import { BookOpen, Shield, Zap, Heart, Globe, Award } from '@/components/Icons';
 
 export default function AboutPage() {
   return (
