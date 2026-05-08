@@ -22,7 +22,7 @@ const createIcon = (importFn: () => Promise<any>) =>
 export const Mail = dynamic(() => import('lucide-react').then(m => m.Mail), { ssr: false }) as any;
 export const Lock = dynamic(() => import('lucide-react').then(m => m.Lock), { ssr: false }) as any;
 export const LogIn = dynamic(() => import('lucide-react').then(m => m.LogIn), { ssr: false }) as any;
-export const Github = dynamic(() => import('lucide-react').then(m => m.Github), { ssr: false }) as any;
+export const Github = dynamic(() => import('lucide-react').then(m => m.Github || (m as any).GitHub), { ssr: false }) as any;
 export const BookOpen = dynamic(() => import('lucide-react').then(m => m.BookOpen), { ssr: false }) as any;
 export const User = dynamic(() => import('lucide-react').then(m => m.User), { ssr: false }) as any;
 export const Menu = dynamic(() => import('lucide-react').then(m => m.Menu), { ssr: false }) as any;
