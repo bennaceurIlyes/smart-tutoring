@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { Mail, Lock, User, Briefcase, GraduationCap, ArrowRight } from 'lucide-react';
+import { Mail, Lock, Briefcase, GraduationCap, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Register() {
@@ -19,7 +19,7 @@ export default function Register() {
     setLoading(true);
     setError(null);
 
-    const { data, error: authError } = await supabase.auth.signUp({
+    const { error: authError } = await supabase.auth.signUp({
       email,
       password,
       options: {

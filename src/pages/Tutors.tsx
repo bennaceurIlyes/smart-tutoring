@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { Search, SlidersHorizontal, Star, Shield, Users, Clock } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Search, SlidersHorizontal, Users } from 'lucide-react';
 
 import TutorCard from '../components/TutorCard';
 

@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { BookOpen, Calendar, MessageSquare, Settings, LogOut, ChevronRight, Zap, Star, User } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Calendar, MessageSquare, LogOut, ChevronRight, Zap, Star } from 'lucide-react';
 
 export default function Dashboard() {
   const [user, setUser] = useState<any>(null);
@@ -39,7 +38,7 @@ export default function Dashboard() {
           <h1 style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>Welcome back, {user?.user_metadata?.first_name || 'Scholar'}</h1>
           <p style={{ color: 'var(--text-muted)' }}>Here's what's happening with your learning journey</p>
         </div>
-        <button onClick={handleLogout} className="btn btn-outline" style={{ color: var(--error), borderColor: 'rgba(239, 68, 68, 0.2)' }}>
+        <button onClick={handleLogout} className="btn btn-outline" style={{ color: 'var(--error)', borderColor: 'rgba(239, 68, 68, 0.2)' }}>
           <LogOut size={18} />
           Sign Out
         </button>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { Mail, Lock, LogIn, Github, ArrowRight } from 'lucide-react';
+import { Mail, Lock, LogIn, GitHub } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Login() {
@@ -88,7 +88,7 @@ export default function Login() {
           </div>
 
           <button type="button" className="btn btn-outline" style={{ width: '100%' }}>
-            <Github size={20} />
+            <GitHub size={20} />
             GitHub
           </button>
         </form>
