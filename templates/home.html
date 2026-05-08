@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+
+{% block title %}SmartTutor — Find Expert Tutors Online{% endblock %}
+
+{% block extra_style %}
+.hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #1d4ed8 100%);
+    padding: 6rem 0 5rem;
+    position: relative;
+    overflow: hidden;
+}
+.hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(37,99,235,.35) 0%, transparent 70%);
+    border-radius: 50%;
+}
+.hero::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -5%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(245,158,11,.15) 0%, transparent 70%);
+    border-radius: 50%;
+}
+.hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.15;
+}
+.hero-title span { color: #fbbf24; }
+.hero-subtitle { color: #93c5fd; font-size: 1.15rem; }
+
+.hero-search {
+    background: rgba(255,255,255,.12);
+    border: 1.5px solid rgba(255,255,255,.25);
+    border-radius: 14px;
+    padding: .6rem .75rem;
+    backdrop-filter: blur(8px);
+}
+.hero-search input {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 1rem;
+    outline: none;
+    width: 100%;
+}
+.hero-search input::placeholder { color: rgba(255,255,255,.6); }
+
+.stat-pill {
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 40px;
+    padding: .4rem 1rem;
+    color: #fff;
+    font-size: .9rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+}
+
+.subject-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    background: var(--white);
+    border: 1.5px solid var(--gray-200);
+    border-radius: 40px;
+    padding: .45rem 1rem;
+    font-weight: 600;
+    font-size: .9rem;
+    color: var(--gray-700);
+    text-decoration: none;
+    transition: all .15s;
+}
+.subject-badge:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--primary-light);
+}
+
+.section-label {
+    font-size: .8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--primary);
+}
+
+.section-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: 700;
+    color: var(--dark);
+}
+
+.how-step {
+    position: relative;
+    padding-left: 4rem;
+}
+.how-step::before {
+    content: counter(step);
+    counter-increment: step;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 42px;
+    height: 42px;
+    background: var(--primary);
+    color: #fff;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.1rem;
+}
+.how-list { counter-reset: step; }
+{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<section class="hero">
+    <div class="container position-relative" style="z-index:1;">
+        <div class="row align-items-center">
+
+            <div class="col-lg-7">
+                <p class="section-label mb-3" style="color:#fbbf24;">🎓 Smart Tutoring Platform</p>
+
+                <h1 class="hero-title mb-3">
+                    Learn from the <span>Best Tutors</span><br>Anywhere, Anytime
+                </h1>
+
+                <p class="hero-subtitle mb-4">
+                    Connect with expert tutors for personalised 1-on-1 sessions.<br>
+                    Master any subject at your own pace.
+                </p>
+
+                <!-- Search -->
+                <div class="hero-search d-flex align-items-center mb-4" style="max-width:480px;">
+                    <i class="bi bi-search me-2" style="color:rgba(255,255,255,.7);"></i>
+
+                    <form action="{% url 'tutors:list' %}" method="get" class="w-100">
+                        <input type="text" name="q" placeholder="Search by subject, tutor name…">
+                        <button type="submit" style="display:none;"></button>
+                    </form>
+
+                    <button class="btn btn-warning btn-sm ms-2 px-3"
+                            onclick="this.previousElementSibling.submit()">
+                        Search
+                    </button>
+                </div>
+
+                <!-- Stats -->
+                <div class="d-flex flex-wrap gap-2">
+                    <span class="stat-pill"><i class="bi bi-people"></i> 500+ Tutors</span>
+                    <span class="stat-pill"><i class="bi bi-book"></i> 50+ Subjects</span>
+                    <span class="stat-pill"><i class="bi bi-star-fill" style="color:#fbbf24;"></i> 4.9 Avg Rating</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- SUBJECTS -->
+<section class="py-5" style="background:#fff;">
+    <div class="container">
+        <div class="text-center mb-4">
+            <p class="section-label">Explore</p>
+            <h2 class="section-title">Popular Subjects</h2>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2 justify-content-center">
+
+            {% if subjects %}
+                {% for subj in subjects %}
+                    <a href="{% url 'tutors:list' %}?subject={{ subj.pk }}" class="subject-badge">
+                        {% if subj.icon %}
+                            <i class="bi {{ subj.icon }}"></i>
+                        {% endif %}
+                        {{ subj.name }}
+                    </a>
+                {% endfor %}
+            {% else %}
+                <a href="{% url 'tutors:list' %}" class="subject-badge">Mathematics</a>
+                <a href="{% url 'tutors:list' %}" class="subject-badge">Physics</a>
+                <a href="{% url 'tutors:list' %}" class="subject-badge">Chemistry</a>
+                <a href="{% url 'tutors:list' %}" class="subject-badge">Biology</a>
+                <a href="{% url 'tutors:list' %}" class="subject-badge">English</a>
+                <a href="{% url 'tutors:list' %}" class="subject-badge">Programming</a>
+                <a href="{% url 'tutors:list' %}" class="subject-badge">History</a>
+                <a href="{% url 'tutors:list' %}" class="subject-badge">Geography</a>
+            {% endif %}
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}

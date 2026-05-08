@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+{% block title %}Student Dashboard — SmartTutoring{% endblock %}
+
+{% block extra_css %}
+<style>
+  .dash { padding: 40px 24px; }
+  .dash__welcome {
+    max-width: 1200px; margin: 0 auto 36px;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+  }
+  .dash__welcome-text h1 {
+    font-family: var(--font-serif);
+    font-size: 1.85rem;
+    letter-spacing: -.025em;
+    line-height: 1.2;
+  }
+  .dash__welcome-text p { color: var(--ink-soft); margin-top: 4px; }
+
+  /* ── Stats row ── */
+  .stats-row {
+    max-width: 1200px; margin: 0 auto 36px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+  }
+  .stat-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+  }
+  .stat-card__label { font-size: .75rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 10px; }
+  .stat-card__value {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    line-height: 1;
+    color: var(--ink);
+  }
+  .stat-card__sub { font-size: .8rem; color: var(--ink-muted); margin-top: 6px; }
+  .stat-card--teal { border-top: 3px solid var(--teal); }
+  .stat-card--gold  { border-top: 3px solid var(--gold); }
+  .stat-card--green { border-top: 3px solid var(--green); }
+  .stat-card--rose  { border-top: 3px solid var(--rose); }
+
+  /* ── Two-col layout ── */
+  .dash__grid {
+    max-width: 1200px; margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 24px;
+  }
+  @media (max-width: 900px) { .dash__grid { grid-template-columns: 1fr; } }
+
+  /* ── Panel ── */
+  .panel {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+  }
+  .panel__head {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .panel__head h2 { font-family: var(--font-serif); font-size: 1.1rem; }
+  .panel__body { padding: 20px 24px; }
+
+  /* ── Booking list ── */
+  .booking-item {
+    display: flex; align-items: center; gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .booking-item:last-child { border-bottom: none; }
+  .booking-item__avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--teal-light);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: .9rem; color: var(--teal);
+    flex-shrink: 0;
+  }
+  .booking-item__info { flex: 1; min-width: 0; }
+  .booking-item__tutor { font-weight: 600; font-size: .9rem; }
+  .booking-item__meta { font-size: .8rem; color: var(--ink-muted); margin-top: 2px; }
+  .booking-item__actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+  /* ── Notification mini ── */
+  .notif-item {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .notif-item:last-child { border-bottom: none; }
+  .notif-item__dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--teal);
+    margin-top: 6px; flex-shrink: 0;
+  }
+  .notif-item__dot--read { background: var(--border); }
+  .notif-item__text { font-size: .875rem; line-height: 1.5; }
+  .notif-item__time { font-size: .75rem; color: var(--ink-muted); margin-top: 2px; }
+
+  .empty-state {
+    text-align: center; padding: 40px 20px; color: var(--ink-muted);
+  }
+  .empty-state__icon { font-size: 2.5rem; margin-bottom: 12px; }
+  .empty-state p { font-size: .875rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dash">
+
+  <!-- Welcome row -->
+  <div class="dash__welcome">
+    <div class="dash__welcome-text">
+      <h1>Welcome back, {{ user.first_name|default:user.email }} 👋</h1>
+      <p>Here's what's happening with your learning.</p>
+    </div>
+    <a href="{% url 'tutors:tutor_search' %}" class="btn btn--primary">Find a tutor</a>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card stat-card--teal">
+      <div class="stat-card__label">Total Sessions</div>
+      <div class="stat-card__value">{{ total_bookings|default:0 }}</div>
+      <div class="stat-card__sub">All time</div>
+    </div>
+    <div class="stat-card stat-card--green">
+      <div class="stat-card__label">Completed</div>
+      <div class="stat-card__value">{{ completed_bookings|default:0 }}</div>
+      <div class="stat-card__sub">Sessions done</div>
+    </div>
+    <div class="stat-card stat-card--gold">
+      <div class="stat-card__label">Upcoming</div>
+      <div class="stat-card__value">{{ upcoming_bookings|default:0 }}</div>
+      <div class="stat-card__sub">Scheduled</div>
+    </div>
+    <div class="stat-card stat-card--rose">
+      <div class="stat-card__label">Pending Reviews</div>
+      <div class="stat-card__value">{{ pending_reviews|default:0 }}</div>
+      <div class="stat-card__sub">Leave feedback</div>
+    </div>
+  </div>
+
+  <!-- Main grid -->
+  <div class="dash__grid">
+
+    <!-- Upcoming bookings -->
+    <div class="panel">
+      <div class="panel__head">
+        <h2>Upcoming Sessions</h2>
+        <a href="{% url 'bookings:list' %}" class="btn btn--secondary btn--sm">View all</a>
+      </div>
+      <div class="panel__body">
+        {% if upcoming_sessions %}
+          {% for booking in upcoming_sessions %}
+            <div class="booking-item">
+              <div class="booking-item__avatar">{{ booking.tutor.user.first_name.0|upper }}{{ booking.tutor.user.last_name.0|upper }}</div>
+              <div class="booking-item__info">
+                <div class="booking-item__tutor">{{ booking.tutor.user.get_full_name }}</div>
+                <div class="booking-item__meta">
+                  {{ booking.subject }} &middot; {{ booking.scheduled_time|date:"D, d M Y, H:i" }}
+                  &middot; {{ booking.duration_hours }}h
+                </div>
+              </div>
+              <div class="booking-item__actions">
+                <span class="badge badge--teal">{{ booking.get_status_display }}</span>
+                <a href="{% url 'bookings:cancel' booking.pk %}">Cancel</a>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="empty-state">
+            <div class="empty-state__icon">📅</div>
+            <p>No upcoming sessions yet.<br><a href="{% url 'tutor_search' %}">Find a tutor</a> to get started.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div style="display:flex;flex-direction:column;gap:20px;">
+
+      <!-- Notifications -->
+      <div class="panel">
+        <div class="panel__head">
+          <h2>Notifications</h2>
+          <a href="{% url 'notification_list' %}" class="btn btn--secondary btn--sm">See all</a>
+        </div>
+        <div class="panel__body">
+          {% if recent_notifications %}
+            {% for n in recent_notifications %}
+              <div class="notif-item">
+                <div class="notif-item__dot {% if n.is_read %}notif-item__dot--read{% endif %}"></div>
+                <div>
+                  <div class="notif-item__text">{{ n.message }}</div>
+                  <div class="notif-item__time">{{ n.created_at|timesince }} ago</div>
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="empty-state">
+              <div class="empty-state__icon">🔔</div>
+              <p>You're all caught up!</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Pending reviews -->
+      {% if sessions_to_review %}
+        <div class="panel">
+          <div class="panel__head"><h2>Leave a Review</h2></div>
+          <div class="panel__body">
+            {% for booking in sessions_to_review %}
+              <div class="booking-item">
+                <div class="booking-item__avatar">{{ booking.tutor.user.first_name.0|upper }}</div>
+                <div class="booking-item__info">
+                  <div class="booking-item__tutor">{{ booking.tutor.user.get_full_name }}</div>
+                  <div class="booking-item__meta">{{ booking.scheduled_time|date:"d M Y" }}</div>
+                </div>
+                <a href="{% url 'create_review' booking.pk %}" class="btn btn--gold btn--sm">Rate</a>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+{% endblock %}

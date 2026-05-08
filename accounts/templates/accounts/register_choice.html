@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}Register — SmartTutor{% endblock %}
+
+{% block extra_style %}
+.auth-wrapper {
+    min-height: calc(100vh - 70px);
+    display: flex; align-items: center;
+    background: linear-gradient(135deg, #f0f7ff 0%, #e8f4ff 100%);
+    padding: 3rem 0;
+}
+.role-card {
+    border: 2.5px solid var(--gray-200);
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all .2s;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    background: #fff;
+}
+.role-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-6px);
+    box-shadow: 0 12px 36px rgba(37,99,235,.15);
+    color: inherit;
+}
+.role-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 style="font-family:var(--font-display);font-size:2.25rem;font-weight:700;">Join SmartTutor</h2>
+            <p class="text-muted">Choose how you'd like to use the platform</p>
+        </div>
+        <div class="row justify-content-center g-4">
+            <div class="col-md-5 col-lg-4">
+                <a href="{% url 'accounts:register_student' %}" class="role-card">
+                    <span class="role-icon">📚</span>
+                    <h4 class="fw-bold mb-2">I'm a Student</h4>
+                    <p class="text-muted mb-3">Find expert tutors, book sessions, and improve your grades.</p>
+                    <span class="btn btn-primary px-4">Register as Student</span>
+                </a>
+            </div>
+            <div class="col-md-5 col-lg-4">
+                <a href="{% url 'accounts:register_tutor' %}" class="role-card">
+                    <span class="role-icon">🏫</span>
+                    <h4 class="fw-bold mb-2">I'm a Tutor</h4>
+                    <p class="text-muted mb-3">Share your knowledge, set your schedule, and earn money teaching.</p>
+                    <span class="btn btn-warning px-4">Register as Tutor</span>
+                </a>
+            </div>
+        </div>
+        <p class="text-center text-muted mt-4">
+            Already have an account? <a href="{% url 'accounts:login' %}" class="fw-bold">Sign in</a>
+        </p>
+    </div>
+</div>
+{% endblock %}
+{% block footer %}{% endblock %}
