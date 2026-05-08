@@ -8,7 +8,8 @@ from decouple import config
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-fallback-key-for-initial-deployment')
-DEBUG = config('DEBUG', cast=bool, default=True)
+ON_VERCEL = config('VERCEL', cast=bool, default=False)
+DEBUG = config('DEBUG', cast=bool, default=not ON_VERCEL)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost,.vercel.app,smart-tutoring.vercel.app').split(',')
 
 INSTALLED_APPS = [
@@ -68,13 +69,24 @@ WSGI_APPLICATION = 'smart_tutoring.wsgi.application'
 # ─── Supabase PostgreSQL Database ────────────────────────────────────────────
 import dj_database_url
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=config('DATABASE_URL', default=f'sqlite:///{BASE_DIR / "db.sqlite3"}'),
-        conn_max_age=600,
-        ssl_require=not DEBUG
-    )
-}
+# ─── Supabase PostgreSQL Database ────────────────────────────────────────────
+import dj_database_url
+
+# On Vercel, we MUST use the environment variable DATABASE_URL
+DATABASE_URL = os.environ.get('DATABASE_URL') or config('DATABASE_URL', default=None)
+
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=ON_VERCEL or not DEBUG)
+    }
+else:
+    # Fallback to SQLite only for local development
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
