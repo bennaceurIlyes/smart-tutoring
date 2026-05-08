@@ -1,70 +1,52 @@
-import Link from 'next/link';
-import { Star, Clock, Globe, ShieldCheck } from 'lucide-react';
+import { Star, Shield, Users } from 'lucide-react';
+import { motion } from 'framer-motion';
 
-interface TutorCardProps {
-  tutor: {
-    id: string;
-    full_name: string;
-    profile_picture?: string;
-    hourly_rate: number;
-    average_rating: number;
-    total_reviews: number;
-    experience_years: string;
-    languages: string;
-    bio?: string;
-    is_verified: boolean;
-    subjects?: { name: string }[];
-  };
-}
-
-export default function TutorCard({ tutor }: TutorCardProps) {
+export default function TutorCard({ tutor }: { tutor: any }) {
   return (
-    <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+    <motion.div 
+      whileHover={{ y: -10 }}
+      className="card glass"
+      style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}
+    >
       <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-        <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'var(--border)', overflow: 'hidden', position: 'relative' }}>
-          {tutor.profile_picture ? (
-            <img src={tutor.profile_picture} alt={tutor.full_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'var(--border)', overflow: 'hidden' }}>
+          {tutor.user?.profile_picture ? (
+            <img src={tutor.user.profile_picture} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           ) : (
-            <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--secondary)' }}>
-              {tutor.full_name.charAt(0)}
-            </div>
-          )}
-          {tutor.is_verified && (
-            <div style={{ position: 'absolute', bottom: 0, right: 0, background: 'white', borderRadius: '50%', padding: '2px', color: '#10b981' }}>
-              <ShieldCheck size={16} fill="currentColor" />
+            <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Users size={32} color="var(--text-muted)" />
             </div>
           )}
         </div>
-        <div>
-          <h3 style={{ margin: 0 }}>{tutor.full_name}</h3>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: '#f59e0b', fontSize: '0.9rem', fontWeight: 600 }}>
-            <Star size={14} fill="currentColor" />
+        <div style={{ flex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <h3 style={{ fontSize: '1.25rem' }}>{tutor.user?.first_name} {tutor.user?.last_name}</h3>
+            {tutor.user?.is_verified && <Shield size={16} color="var(--success)" />}
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#f59e0b', fontSize: '0.9rem' }}>
+            <Star size={16} fill="#f59e0b" />
             <span>{tutor.average_rating} ({tutor.total_reviews} reviews)</span>
           </div>
         </div>
       </div>
 
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-        {tutor.subjects?.map(s => (
-          <span key={s.name} style={{ fontSize: '0.75rem', background: 'rgba(99, 102, 241, 0.1)', color: 'var(--primary)', padding: '0.25rem 0.6rem', borderRadius: '20px', fontWeight: 600 }}>
-            {s.name}
-          </span>
+      <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+        {tutor.user?.bio || 'Professional tutor dedicated to student success and academic excellence.'}
+      </p>
+
+      <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+        {['Mathematics', 'Physics', 'Computing'].map(subject => (
+          <span key={subject} className="badge badge-primary">{subject}</span>
         ))}
       </div>
 
-      <p style={{ fontSize: '0.9rem', color: 'var(--secondary)', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-        {tutor.bio || "No bio available."}
-      </p>
-
-      <div style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ marginTop: 'auto', paddingTop: '1.5rem', borderTop: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <span style={{ fontSize: '1.25rem', fontWeight: 800 }}>${tutor.hourly_rate}</span>
-          <span style={{ fontSize: '0.8rem', color: 'var(--secondary)' }}>/hr</span>
+          <span style={{ fontSize: '1.5rem', fontWeight: 700 }}>${tutor.hourly_rate}</span>
+          <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>/hr</span>
         </div>
-        <Link href={`/tutors/${tutor.id}`} className="btn btn-primary" style={{ padding: '0.5rem 1rem' }}>
-          View Profile
-        </Link>
+        <button className="btn btn-primary" style={{ padding: '0.5rem 1rem' }}>View Profile</button>
       </div>
-    </div>
+    </motion.div>
   );
 }
