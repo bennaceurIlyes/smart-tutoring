@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
+const nextConfig: any = {
   transpilePackages: ["lucide-react"],
   eslint: {
     ignoreDuringBuilds: true,
