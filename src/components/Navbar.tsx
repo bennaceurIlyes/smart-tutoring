@@ -26,20 +26,23 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Mobile toggle (Simplified) */}
-        <div style={{ display: 'none' }} className="mobile-toggle">
-           <button onClick={() => setIsOpen(!isOpen)}>
+        {/* Mobile toggle */}
+        <div className="mobile-toggle" style={{ display: 'none' }}>
+           <button onClick={() => setIsOpen(!isOpen)} className="btn" style={{ padding: '0.5rem' }}>
              {isOpen ? <X /> : <Menu />}
            </button>
-        </div>
+         </div>
       </div>
       
-      <style jsx>{`
-        @media (max-width: 768px) {
-          .desktop-menu { display: none !important; }
-          .mobile-toggle { display: block !important; }
-        }
-      `}</style>
+      {/* Mobile Menu Overlay */}
+      {isOpen && (
+        <div className="glass animate-fade-in" style={{ position: 'absolute', top: '80px', left: 0, right: 0, padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem', borderTop: '1px solid var(--border)' }}>
+          <Link href="/tutors" onClick={() => setIsOpen(false)}>Find Tutors</Link>
+          <Link href="/subjects" onClick={() => setIsOpen(false)}>Subjects</Link>
+          <Link href="/about" onClick={() => setIsOpen(false)}>How it works</Link>
+          <Link href="/login" className="btn btn-primary" onClick={() => setIsOpen(false)}>Login</Link>
+        </div>
+      )}
     </nav>
   );
 }
