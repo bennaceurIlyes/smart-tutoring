@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', cast=bool, default=True)
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost').split(',')
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost,.vercel.app').split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -17,7 +17,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
+    'corsheaders',
     # Project apps
     'accounts',
     'students',
@@ -30,6 +32,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -37,6 +41,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True  # Adjust in production
 
 ROOT_URLCONF = 'smart_tutoring.urls'
 
@@ -59,12 +65,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'smart_tutoring.wsgi.application'
 
-# ─── MySQL Database ────────────────────────────────────────────────────────────
+# ─── Supabase PostgreSQL Database ────────────────────────────────────────────
+import dj_database_url
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL', default=f'sqlite:///{BASE_DIR / "db.sqlite3"}'),
+        conn_max_age=600,
+        ssl_require=not DEBUG
+    )
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -81,8 +90,19 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# ─── Supabase Storage (S3 Compatible) ─────────────────────────────────────────
+if not DEBUG:
+    INSTALLED_APPS += ['storages']
+    AWS_ACCESS_KEY_ID = config('SUPABASE_ACCESS_KEY_ID', default='')
+    AWS_SECRET_ACCESS_KEY = config('SUPABASE_SECRET_ACCESS_KEY', default='')
+    AWS_STORAGE_BUCKET_NAME = config('SUPABASE_STORAGE_BUCKET', default='avatars')
+    AWS_S3_ENDPOINT_URL = config('SUPABASE_S3_URL', default='')
+    AWS_S3_REGION_NAME = 'us-east-1'  # Default for Supabase
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
