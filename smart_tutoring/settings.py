@@ -7,9 +7,9 @@ from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-fallback-key-for-initial-deployment')
 DEBUG = config('DEBUG', cast=bool, default=True)
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost,.vercel.app').split(',')
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost,.vercel.app,smart-tutoring.vercel.app').split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',

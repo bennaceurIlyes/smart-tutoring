@@ -16,6 +16,10 @@
       "dest": "/static/$1"
     },
     {
+      "src": "/favicon.ico",
+      "dest": "static/favicon.ico"
+    },
+    {
       "src": "/(.*)",
       "dest": "smart_tutoring/wsgi.py"
     }

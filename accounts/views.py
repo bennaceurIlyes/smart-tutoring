@@ -110,9 +110,9 @@ def profile_view(request):
     tutor_profile = None
     student_profile = None
     if user.is_tutor:
-        tutor_profile = getattr(user, 'tutorprofile', None)
+        tutor_profile = getattr(user, 'tutor_profile', None)
     else:
-        student_profile = getattr(user, 'studentprofile', None)
+        student_profile = getattr(user, 'student_profile', None)
 
     context = {
         'profile_user': user,

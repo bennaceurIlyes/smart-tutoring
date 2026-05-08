@@ -9,10 +9,8 @@ urlpatterns = [
 
     path('', RedirectView.as_view(url='/accounts/')),  # 👈 مهم
 
-    
     path('students/', include('students.urls')),
     path('reviews/', include('reviews.urls')),
-    path('admin/',         admin.site.urls),
     path('accounts/',      include('accounts.urls', namespace='accounts')),
     path('dashboard/',     include('dashboard.urls', namespace='dashboard')),
     path('tutors/',        include('tutors.urls', namespace='tutors')),      # ← ajouter
